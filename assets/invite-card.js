@@ -1,5 +1,5 @@
 /* =========================================================
-   幸福茶席・報名成功電子邀請卡  assets/invite-card.js
+   幸福講座・報名成功電子邀請卡  assets/invite-card.js
    - 不修改 app.js / GAS：偵測「報名完成」區塊出現後才產生卡片
    - 卡片用 canvas 畫成圖片，網頁看到的 = 下載的
    ========================================================= */
@@ -10,19 +10,19 @@
   var SETTINGS = {
     // 背景圖：準備好後填路徑，例如 "assets/images/invite-bg.jpg"；留空 = 用簡單配色
     backgroundImage: "",
-    title: "幸福茶席",
-    subtitle: "11/7 台南・免費公益講座",
+    title: "幸福講座",
+    subtitle: "11/15 台南・公益講座",
     inviteBefore: "誠摯邀請",
-    inviteAfter: "入席",
-    inviteLine: "11 月 7 日午後，為您保留一席茶",
-    date: "2026 年 11 月 7 日（六）",
-    time: "下午 2:00 入席・2:30 開始",
-    venue: "台南維悅酒店 B1 國際會議廳",
-    address: "台南市安平區慶平路 539 號",
-    welcome: "一杯茶的時間，好好照顧自己。期待與您茶席相見。",
-    contact: "報名窗口｜謝小姐 0910-283-352",
-    shareText: "我報名了 11/7 台南「幸福茶席」免費公益講座，一起來喝杯茶吧！",
-    fileName: "幸福茶席邀請卡"
+    inviteAfter: "入場",
+    inviteLine: "11 月 15 日午後，留一個下午給自己",
+    date: "2026 年 11 月 15 日（日）",
+    time: "下午 2:00 入場・2:30–4:30",
+    venue: "東橋里活動中心",
+    address: "臺南市永康區東橋十街158號",
+    welcome: "讓心放鬆，找回幸福的力量。期待與您相見。",
+    contact: "報名窗口｜郭小姐 0953-056-201",
+    shareText: "我報名了 11/15 台南「幸福講座」公益講座，一起留一個下午給自己。",
+    fileName: "幸福講座邀請卡"
   };
 
   var C = { paper: "#FBF8F1", paper2: "#F1E9D8", green: "#2B4234", gold: "#B08D52",
@@ -142,7 +142,7 @@
     ctx.strokeStyle = C.goldL; ctx.lineWidth = 1.5; ctx.strokeRect(50, 50, W - 100, H - 100);
 
     // 上方：茶杯 + 標題
-    drawTeaCup(ctx, W / 2, 78);
+    drawOrnament(ctx, 250);
     setSpacing(ctx, 24);
     fitText(ctx, SETTINGS.title, 422, 118, 600, 900, C.green);
     setSpacing(ctx, 4);
@@ -235,7 +235,7 @@
     currentNames = getNames();
     var canvas = await drawCard(currentNames);
     img.src = canvas.toDataURL("image/png");
-    img.alt = "幸福茶席電子邀請卡：誠摯邀請 " + currentNames + " 入席";
+    img.alt = "幸福講座電子邀請卡：誠摯邀請 " + currentNames + " 入場";
     canvas.toBlob(function (b) { currentBlob = b; }, "image/png");
     box.hidden = false;
   }
@@ -258,3 +258,4 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
+

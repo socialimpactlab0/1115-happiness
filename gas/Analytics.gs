@@ -50,6 +50,7 @@ function refreshTeaAnalytics() {
   let eventId = "";
 
   rows.forEach(function(row) {
+    if (String(row[5] || "") !== EVENT_ID) return;
     const time = row[0];
     const eventName = String(row[2] || "");
     const sessionId = String(row[4] || "");
@@ -201,7 +202,7 @@ function buildAnalyticsSheet_(sheet, data, timezone) {
   sheet.setColumnWidth(9, 160);
 
   sheet.getRange("A1:M2").merge()
-    .setValue("《11/7 幸福茶席》網站流量分析")
+    .setValue("《11/15 讓心放鬆》網站流量分析")
     .setBackground(C.navy).setFontColor(C.white)
     .setFontSize(20).setFontWeight("bold")
     .setHorizontalAlignment("center");
@@ -308,3 +309,4 @@ function table_(sheet, startRow, startCol, title, headers, rows, C) {
 function rate_(numerator, denominator) {
   return denominator > 0 ? numerator / denominator : 0;
 }
+

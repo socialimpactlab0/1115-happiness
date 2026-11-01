@@ -1,12 +1,12 @@
 window.TEA_EVENT_CONFIG = {
-  // 報名已截止：前端不再接受新的報名資料。
-  REGISTRATION_CLOSED: true,
+  // 11/15 報名開放；送出前會核對後端活動版本。
+  REGISTRATION_CLOSED: false,
 
   // 先部署新的 GAS 網頁應用程式，再把結尾為 /exec 的網址貼在下面。
-  GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbyTVCWSuKM1afRHcHk4DuqfjnTQv4uj4u5ULTWerpfA3coOXElWJ7mD74mZAmcND5U/exec",
+  GAS_WEB_APP_URL: "https://script.google.com/macros/s/AKfycbwOOgmc8gH6DCLEEQsGAqyk-ZLCE4Oobisec8RWRB729Cb2eIHELhpJ_O5PoivLHOGt/exec",
 
-  // 11/7 活動編號。請勿與舊活動共用同一個活動編號。
-  EVENT_ID: "2026-11-07-happiness-tea-tainan",
+  // 11/15 活動編號。請勿與舊活動共用同一個活動編號。
+  EVENT_ID: "2026-11-15-happiness-tainan",
 
   // 沿用原 mind-body-tea-tainan 的 Meta Pixel。
   // 若不需要 Meta Pixel，可改成空字串 ""。

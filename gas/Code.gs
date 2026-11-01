@@ -1,4 +1,6 @@
-const REGISTRATION_CLOSED = true;
+const EVENT_ID = "2026-11-15-happiness-tainan";
+const TARGET_SPREADSHEET_ID = "1C-Gsdza1XTP96gR8h4bYKVarYquuZtIfhkYYbEKlrrA";
+const REGISTRATION_CLOSED = false;
 const REGISTRATION_SHEET_NAME = "報名名單";
 const TRACKING_SHEET_NAME = "流量紀錄";
 
@@ -24,7 +26,7 @@ const ALLOWED_TRACKING_EVENTS = new Set([
 ]);
 
 function setupRegistrationSheet() {
-  const spreadsheet = SpreadsheetApp.getActiveSpreadsheet();
+  const spreadsheet = SpreadsheetApp.openById(TARGET_SPREADSHEET_ID);
   if (!spreadsheet) {
     throw new Error("請從 Google 試算表的「擴充功能 → Apps Script」開啟並執行。");
   }
@@ -68,13 +70,18 @@ function doGet(e) {
     return json_(payload);
   }
 
-  return json_({
+  const health = {
     ok: true,
-    service: "1107-happiness-tea-registration",
-    version: "2026-10-06-submit-fix",
+    eventId: EVENT_ID,
+    registrationClosed: REGISTRATION_CLOSED,
+    service: "1115-happiness-registration",
+    version: "2026-11-01-1115",
     tracking: true,
     message: "GAS 報名與流量追蹤服務運作中"
-  });
+  };
+  const cb = clean_(parameter.callback, 80);
+  if (cb && /^[A-Za-z_$][0-9A-Za-z_$]*$/.test(cb)) return ContentService.createTextOutput(cb + "(" + JSON.stringify(health) + ");").setMimeType(ContentService.MimeType.JAVASCRIPT);
+  return json_(health);
 }
 
 function doPost(e) {
@@ -83,6 +90,7 @@ function doPost(e) {
       return json_({ ok: false, message: "缺少資料" });
     }
 
+    if (clean_(e.parameter.eventId, 80) !== EVENT_ID) return json_({ok:false,message:"活動編號不符，請重新開啟11/15活動網站"});
     if (clean_(e.parameter.requestType, 40) === "track_event") {
       return handleTrackingEvent_(e.parameter);
     }
@@ -155,7 +163,7 @@ function handleRegistration_(parameter) {
     const clientRecordId = safeCell_(clean_(parameter.clientRecordId, 120));
     const partySize = Number(parameter.partySize);
 
-    if (!Number.isInteger(partySize) || partySize < 1 || partySize > 4) {
+    if (!Number.isInteger(partySize) || partySize < 1 || partySize > 2) {
       return json_({ ok: false, message: "參加人數不正確" });
     }
 
@@ -229,10 +237,7 @@ function handleRegistration_(parameter) {
 }
 
 function getSpreadsheet_() {
-  const spreadsheetId = PropertiesService.getScriptProperties()
-    .getProperty("SPREADSHEET_ID");
-  if (!spreadsheetId) throw new Error("尚未執行 setupRegistrationSheet");
-  return SpreadsheetApp.openById(spreadsheetId);
+  return SpreadsheetApp.openById(TARGET_SPREADSHEET_ID);
 }
 
 function getOrCreateRegistrationSheet_(spreadsheet) {
@@ -259,7 +264,7 @@ function checkRegistration_(parameter) {
   try {
     const eventId = clean_(parameter.eventId, 80);
     const recordId = clean_(parameter.recordId, 120);
-    if (!eventId || !recordId) return { ok: false, found: false };
+    if (eventId !== EVENT_ID || !recordId) return { ok: false, found: false };
 
     const spreadsheet = getSpreadsheet_();
     const sheet = getOrCreateRegistrationSheet_(spreadsheet);
@@ -351,3 +356,4 @@ function json_(payload) {
     .createTextOutput(JSON.stringify(payload))
     .setMimeType(ContentService.MimeType.JSON);
 }
+

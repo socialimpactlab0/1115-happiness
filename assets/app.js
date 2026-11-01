@@ -28,15 +28,39 @@
   const partySizeSelect = form.elements.partySize;
   const participantGroups = Array.from(document.querySelectorAll("[data-participant]"));
 
-  const VISITOR_KEY = "tea_event_visitor_id_v1";
-  const SESSION_KEY = "tea_event_session_id_v1";
-  const ATTRIBUTION_KEY = "tea_event_attribution_v1";
-  const PENDING_SUBMISSION_KEY = "tea_event_pending_submission_v1";
+  const VISITOR_KEY = "tea_event_visitor_id_v1_" + config.EVENT_ID;
+  const SESSION_KEY = "tea_event_session_id_v1_" + config.EVENT_ID;
+  const ATTRIBUTION_KEY = "tea_event_attribution_v1_" + config.EVENT_ID;
+  const PENDING_SUBMISSION_KEY = "tea_event_pending_submission_v1_" + config.EVENT_ID;
 
   const visitorId = getOrCreateId(localStorage, VISITOR_KEY);
   const sessionId = getOrCreateId(sessionStorage, SESSION_KEY);
   const tracking = getTracking();
   let formStarted = false;
+  let backendReady = false;
+  let healthRequest = null;
+  function verifyBackend() {
+    if (backendReady) return Promise.resolve(true);
+    if (healthRequest) return healthRequest;
+    healthRequest = new Promise(function(resolve) {
+      const callback = "__teaHealth_" + Date.now().toString(36);
+      const script = document.createElement("script");
+      let done = false;
+      const timer = setTimeout(function(){finish(false);}, 8000);
+      function finish(ok) {
+        if(done) return; done = true; clearTimeout(timer);
+        delete window[callback]; script.remove();
+        backendReady = ok; healthRequest = null; resolve(ok);
+      }
+      window[callback] = function(data) {
+        finish(Boolean(data && data.ok && data.eventId === config.EVENT_ID && data.registrationClosed === false));
+      };
+      script.onerror = function(){finish(false);};
+      script.src = config.GAS_WEB_APP_URL + "?requestType=health&callback=" + callback;
+      document.head.appendChild(script);
+    });
+    return healthRequest;
+  }
 
   function gasUrlIsReady() {
     return /^https:\/\/script\.google\.com\/macros\/s\/.+\/exec$/.test(
@@ -193,7 +217,7 @@
   }
 
   function trackEvent(eventName, detail) {
-    if (!gasUrlIsReady()) return Promise.resolve();
+    if (!gasUrlIsReady() || !backendReady) return Promise.resolve();
 
     const extra = detail || {};
     const payload = new URLSearchParams({
@@ -284,6 +308,15 @@
     status.textContent = "";
 
     if (!form.reportValidity()) return;
+    setLoading(true);
+    status.textContent = "正在確認報名服務…";
+    const ready = await verifyBackend();
+    setLoading(false);
+    if (!ready) {
+      status.textContent = "線上報名暫未開放，請洽郭小姐 0953-056-201 協助報名。";
+      return;
+    }
+    status.textContent = "";
 
     const formData = new FormData(form);
     const partySize = Number(formData.get("partySize"));
@@ -387,5 +420,8 @@
     form.scrollIntoView({ behavior: "smooth", block: "center" });
   });
 
-  trackEvent("page_view", { title: document.title });
+  verifyBackend().then(function(ready){
+    if (ready) trackEvent("page_view", { title: document.title });
+    else status.textContent = "線上報名暫未開放，請洽郭小姐 0953-056-201 協助報名。";
+  });
 })();
