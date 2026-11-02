@@ -10,18 +10,18 @@
   var SETTINGS = {
     // 背景圖：準備好後填路徑，例如 "assets/images/invite-bg.jpg"；留空 = 用簡單配色
     backgroundImage: "",
-    title: "幸福講座",
+    title: "幸福，可以學著來",
     subtitle: "11/15 台南・公益講座",
     inviteBefore: "誠摯邀請",
     inviteAfter: "入場",
-    inviteLine: "11 月 15 日午後，留一個下午給自己",
+    inviteLine: "精神科醫師，幽默聊幸福",
     date: "2026 年 11 月 15 日（日）",
     time: "下午 2:00 入場・2:30–4:30",
     venue: "東橋里活動中心",
     address: "臺南市永康區東橋十街158號",
-    welcome: "讓心放鬆，找回幸福的力量。期待與您相見。",
+    welcome: "理解情緒，讓心放鬆，發現日常幸福。",
     contact: "報名窗口｜郭小姐 0953-056-201",
-    shareText: "我報名了 11/15 台南「幸福講座」公益講座，一起留一個下午給自己。",
+    shareText: "我報名了 11/15 永康東橋「幸福，可以學著來」公益講座，一起聽精神科醫師幽默聊幸福。",
     fileName: "幸福講座邀請卡"
   };
 
@@ -258,4 +258,5 @@
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", init);
   else init();
 })();
+
 
