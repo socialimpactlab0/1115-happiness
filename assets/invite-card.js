@@ -10,7 +10,7 @@
   var SETTINGS = {
     // 背景圖：準備好後填路徑，例如 "assets/images/invite-bg.jpg"；留空 = 用簡單配色
     backgroundImage: "",
-    title: "幽默聊幸福",
+    title: "讓心鬆一口氣",
     subtitle: "11/15 台南・公益講座",
     inviteBefore: "誠摯邀請",
     inviteAfter: "入場",
@@ -19,9 +19,9 @@
     time: "下午 2:00 入場・2:30–4:30",
     venue: "東橋里活動中心",
     address: "臺南市永康區東橋十街158號",
-    welcome: "理解情緒，讓心放鬆，發現日常幸福。",
+    welcome: "理解情緒，面對壓力，發現幸福。",
     contact: "報名窗口｜郭小姐 0953-056-201",
-    shareText: "我報名了 11/15 永康東橋「幽默聊幸福」公益講座，一起聽精神科醫師幽默聊幸福。",
+    shareText: "我報名了 11/15 永康東橋「讓心鬆一口氣」公益講座，一起聽精神科醫師幽默聊幸福。",
     fileName: "幸福講座邀請卡"
   };
 
